@@ -3,7 +3,7 @@
 
 **Author:** Maukewonge Yaw Nyarko-Tetteh
 **Index Number:** 10022200107
-**Lecturer:** Godwin N. Danso  
+**Lecturer:** Godwin Danso  
 **Academic City University — Faculty of Computational Sciences and Informatics**
 
 ---
@@ -17,7 +17,7 @@ A fully custom Retrieval-Augmented Generation (RAG) chatbot for Academic City Un
 > ⚠️ Built **without** LangChain, LlamaIndex, or any pre-built RAG pipeline. All components — chunking, embedding, vector storage, retrieval, and prompt construction — implemented manually.
 
 ## Live Demo
-**[Deployed App URL — insert after Streamlit Cloud deployment]**
+https://ai10022200107-mauke.streamlit.app/
 
 ## Features
 - 🔍 Hybrid semantic + keyword retrieval (FAISS + BM25)
@@ -33,17 +33,17 @@ A fully custom Retrieval-Augmented Generation (RAG) chatbot for Academic City Un
 ```bash
 # 1. Clone the repo
 git clone https://github.com/mauke-231/ai_10022200107.git
-cd 
+cd ai_10022200107
 
 # 2. Install dependencies
-pip install -r requirements.txt
+pip install -r requirements.txt or python -m pip install -r requirements.txt
 
 # 3. Set your LLM API key
 export LLM_PROVIDER="anthropic"   # or "openai" or "google"
 export LLM_API_KEY="your-api-key"
 
 # 4. Run the app
-streamlit run app.py
+streamlit run app.py or python -m streamlit run app.py
 ```
 
 ## Project Structure
