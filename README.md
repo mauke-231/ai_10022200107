@@ -43,7 +43,7 @@ export LLM_PROVIDER="anthropic"   # or "openai" or "google"
 export LLM_API_KEY="your-api-key"
 
 # 4. Run the app
-streamlit run app.py
+streamlit run app.py or python -m streamlit run app.py
 ```
 
 ## Project Structure
