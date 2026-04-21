@@ -56,7 +56,7 @@ class LLMClient:
             "anthropic": "claude-3-haiku-20240307",
             "openai":    "gpt-4o-mini",
             "google":    "gemini-2.0-flash",
-            "groq":      "llama-3.3-70b-versatile",
+            "groq":      "llama-3.1-8b-instant",
         }
         return defaults.get(self.provider, "claude-3-haiku-20240307")
 
@@ -130,10 +130,9 @@ class LLMClient:
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
-        messages = []
         if system:
-            messages.append({"role": "system", "content": system})
-        messages.append({"role": "user", "content": prompt})
+            prompt = system + "\n\n" + prompt
+        messages = [{"role": "user", "content": prompt}]
         body = {"model": self.model, "messages": messages,
                 "max_tokens": max_tokens}
         resp = requests.post(url, headers=headers, json=body, timeout=60)
@@ -253,7 +252,30 @@ class RAGPipeline:
             log.failure_reason = "pure_llm_mode"
             prompt = (f"{user_query}\n\n"
                       f"(Answer from your general knowledge about Ghana.)")
-            response, meta = self.llm.complete(prompt, max_tokens=600)
+            try:
+                response, meta = self.llm.complete(prompt, max_tokens=600)
+            except requests.exceptions.HTTPError as e:
+                if e.response and e.response.status_code == 429:
+                    response = ("You've reached the rate limit for the AI service. Please wait a few minutes before asking more questions.")
+                    meta = {"error": "rate_limit"}
+                else:
+                    response = ("An error occurred while generating the response. Please try again later.")
+                    meta = {"error": str(e)}
+                log.llm_response = response
+                log.llm_metadata = meta
+                log.latency_ms = (time.time() - t_start) * 1000
+                logger.warning(f"  LLM call failed: {e}")
+                self._log_to_file(log)
+                return response, log
+            except Exception as e:
+                response = ("An unexpected error occurred. Please try again later.")
+                meta = {"error": str(e)}
+                log.llm_response = response
+                log.llm_metadata = meta
+                log.latency_ms = (time.time() - t_start) * 1000
+                logger.error(f"  Unexpected error: {e}")
+                self._log_to_file(log)
+                return response, log
             log.llm_response = response
             log.llm_metadata = meta
             log.latency_ms = (time.time() - t_start) * 1000
@@ -320,7 +342,34 @@ class RAGPipeline:
 
         # ── STAGE 6: LLM generation ───────────────────────────────────
         logger.info("[STAGE 6] Calling LLM...")
-        response, meta = self.llm.complete(final_prompt, max_tokens=800)
+        try:
+            response, meta = self.llm.complete(final_prompt, max_tokens=800)
+        except requests.exceptions.HTTPError as e:
+            status_code = e.response.status_code if e.response else 'unknown'
+            if e.response and e.response.status_code == 429:
+                response = ("You've reached the rate limit for the AI service. Please wait a few minutes before asking more questions.")
+                meta = {"error": "rate_limit", "status_code": status_code}
+            else:
+                response = ("An error occurred while generating the response. Please try again later.")
+                meta = {"error": str(e), "status_code": status_code}
+            log.llm_response = response
+            log.llm_metadata = meta
+            log.latency_ms = (time.time() - t_start) * 1000
+            logger.warning(f"  LLM call failed: {e} (status: {status_code})")
+            # Skip memory storage on error
+            self._log_to_file(log)
+            return response, log
+        except Exception as e:
+            response = ("An unexpected error occurred. Please try again later.")
+            meta = {"error": str(e)}
+            log.llm_response = response
+            log.llm_metadata = meta
+            log.latency_ms = (time.time() - t_start) * 1000
+            logger.error(f"  Unexpected error: {e}")
+            # Skip memory storage on error
+            self._log_to_file(log)
+            return response, log
+
         log.llm_response = response
         log.llm_metadata = meta
         log.latency_ms = (time.time() - t_start) * 1000

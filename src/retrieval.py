@@ -263,21 +263,25 @@ class HybridRetriever:
         Adds related terms to improve recall on sparse queries.
         """
         expansions = {
-            "gdp": "GDP gross domestic product economic growth",
-            "inflation": "inflation consumer price index CPI",
-            "revenue": "revenue tax collection fiscal income",
-            "debt": "debt borrowing loans IMF fiscal deficit",
-            "election": "election votes presidential results constituency",
-            "ndc": "NDC National Democratic Congress Mahama John Dramani Mahama",
-            "npp": "NPP New Patriotic Party Akufo-Addo Nana Akufo-Addo",
-            "budget": "budget expenditure fiscal policy 2025",
+            "gdp": "GDP gross domestic product economic growth rate medium-term outlook projection",
+            "inflation": "inflation consumer price index CPI target end-period",
+            "revenue": "revenue tax collection fiscal income fiscal measures policy",
+            "debt": "debt borrowing loans IMF fiscal deficit sustainability",
+            "election": "election votes presidential results constituency performance",
+            "ndc": "NDC National Democratic Congress Mahama John Dramani Mahama votes performance results",
+            "npp": "NPP New Patriotic Party Akufo-Addo Nana Akufo-Addo votes performance results",
+            "budget": "budget expenditure fiscal policy 2025 statement measures",
             "education": "education schools GETFUND capitation",
             "health": "health NHIS hospitals nhif",
             "ivor greenstreet": "Ivor Kobina Greenstreet CPP",
             "akua donkor": "Akua Donkor GFP",
             "john mahama": "John Dramani Mahama NDC",
-            "ashanti": "Ashanti Region",
-            "ahafo": "Ahafo Region",
+            "ashanti": "Ashanti Region votes results performance",
+            "ahafo": "Ahafo Region votes results performance",
+            "greater accra": "Greater Accra Region votes results performance",
+            "projected": "projected forecast outlook expected growth rate",
+            "key measures": "key measures policies initiatives programs framework",
+            "perform": "perform performance results votes outcome",
         }
         lower = query.lower()
         extras = []
@@ -294,7 +298,7 @@ class HybridRetriever:
 # ─────────────────────────────────────────────
 
 def detect_retrieval_failure(results: List[Tuple], query: str,
-                              score_threshold: float = 0.15) -> Tuple[bool, str]:
+                              score_threshold: float = 0.05) -> Tuple[bool, str]:
     """
     Detects when retrieval has likely failed.
     Failure conditions:
