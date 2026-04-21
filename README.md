@@ -32,7 +32,7 @@ A fully custom Retrieval-Augmented Generation (RAG) chatbot for Academic City Un
 
 ```bash
 # 1. Clone the repo
-git clone 
+git clone https://github.com/mauke-231/ai_10022200107.git
 cd 
 
 # 2. Install dependencies
