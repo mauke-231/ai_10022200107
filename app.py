@@ -174,17 +174,17 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Welcome message
-if not st.session_state.messages:
-    st.markdown("### Welcome! 👋")
-    st.markdown("I'm here to help you explore Ghana's 2025 Budget and Election Results. Feel free to ask questions or try the sample queries below.")
-
 # Chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if ("pipeline" not in st.session_state
         or st.session_state.get("_pipeline_provider") != provider):
     load_pipeline()
+
+# Welcome message
+if not st.session_state.messages:
+    st.markdown("### Welcome! 👋")
+    st.markdown("I'm here to help you explore Ghana's 2025 Budget and Election Results. Feel free to ask questions or try the sample queries below.")
 
 # Render existing chat messages
 for msg in st.session_state.messages:
