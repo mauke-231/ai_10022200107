@@ -190,9 +190,8 @@ for msg in st.session_state.messages:
 # CHAT INPUT
 # ─────────────────────────────────────────────
 
-user_input = st.chat_input("Ask about Ghana's 2025 Budget or Election Results...")
-
-if user_input:
+def process_query(user_input):
+    """Process a user query and generate response."""
     # Display user message
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
@@ -282,6 +281,19 @@ if user_input:
                            "[No API key — cannot call LLM]")
                 st.caption("RAG uses retrieved documents; Pure LLM uses only "
                            "the model's training data (may hallucinate).")
+
+user_input = st.chat_input("Ask about Ghana's 2025 Budget or Election Results...")
+
+if user_input:
+    process_query(user_input
+user_input = st.chat_input("Ask about Ghana's 2025 Budget or Election Results...")
+
+if user_input:
+    process_query(user_input
+user_input = st.chat_input("Ask about Ghana's 2025 Budget or Election Results...")
+
+if user_input:
+    process_query(user_input)
 
 # ─────────────────────────────────────────────
 # BOTTOM — EXAMPLE QUERIES
