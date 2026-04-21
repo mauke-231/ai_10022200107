@@ -186,17 +186,16 @@ def csv_to_chunks(csv_path: str) -> List[Chunk]:
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for i, raw_row in enumerate(reader):
-            row = clean_csv_row(raw_row)
+            # Strip BOM from keys if present
+            row = {k.lstrip('\ufeff').strip().lower().replace(" ", "_"): str(v).strip() for k, v in raw_row.items()}
             # Build a human-readable sentence for each row
             text = (
                 f"In the {row.get('year', 'N/A')} Ghana election, "
-                f"{row.get('presidential_candidate', 'N/A')} of the "
+                f"{row.get('candidate', 'N/A')} of the "
                 f"{row.get('party', 'N/A')} party received "
                 f"{row.get('votes', 'N/A')} votes "
-                f"({row.get('percentage', 'N/A')}%) in the "
-                f"{row.get('constituency', 'N/A')} constituency, "
-                f"{row.get('region', 'N/A')} Region. "
-                f"Total valid votes cast: {row.get('total_valid_votes', 'N/A')}."
+                f"({row.get('votes(%)', 'N/A')}%) in the "
+                f"{row.get('new_region', 'N/A')}."
             )
             chunks.append(Chunk(
                 chunk_id=f"election_row_{i}",

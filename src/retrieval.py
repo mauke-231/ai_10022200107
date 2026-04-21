@@ -268,11 +268,16 @@ class HybridRetriever:
             "revenue": "revenue tax collection fiscal income",
             "debt": "debt borrowing loans IMF fiscal deficit",
             "election": "election votes presidential results constituency",
-            "ndc": "NDC National Democratic Congress Mahama",
-            "npp": "NPP New Patriotic Party Akufo-Addo Bawumia",
+            "ndc": "NDC National Democratic Congress Mahama John Dramani Mahama",
+            "npp": "NPP New Patriotic Party Akufo-Addo Nana Akufo-Addo",
             "budget": "budget expenditure fiscal policy 2025",
             "education": "education schools GETFUND capitation",
             "health": "health NHIS hospitals nhif",
+            "ivor greenstreet": "Ivor Kobina Greenstreet CPP",
+            "akua donkor": "Akua Donkor GFP",
+            "john mahama": "John Dramani Mahama NDC",
+            "ashanti": "Ashanti Region",
+            "ahafo": "Ahafo Region",
         }
         lower = query.lower()
         extras = []

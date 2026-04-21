@@ -388,7 +388,7 @@ st.markdown("---")
 st.markdown("#### 💡 Try these example queries:")
 examples = [
     "What is Ghana's projected GDP growth for 2025?",
-    "Who won the 2024 presidential election in Kumasi Central?",
+    "Who got the highest votes in Ashanti Region?",
     "What are Ghana's key revenue measures in the 2025 budget?",
     "What is the inflation target set in the 2025 budget?",
     "How did NDC perform in the Greater Accra Region?",
