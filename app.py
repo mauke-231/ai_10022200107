@@ -285,15 +285,95 @@ def process_query(user_input):
 user_input = st.chat_input("Ask about Ghana's 2025 Budget or Election Results...")
 
 if user_input:
-    process_query(user_input
-user_input = st.chat_input("Ask about Ghana's 2025 Budget or Election Results...")
+    # Display user message
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-if user_input:
-    process_query(user_input
-user_input = st.chat_input("Ask about Ghana's 2025 Budget or Election Results...")
+    # Run pipeline
+    pipeline = st.session_state.pipeline
+    pipeline.llm.api_key = api_key
+    pipeline.llm.provider = provider
+    pipeline.llm.model = pipeline.llm._default_model()
 
-if user_input:
-    process_query(user_input)
+    with st.chat_message("assistant"):
+        with st.spinner("Searching documents and generating response..."):
+            response, log = pipeline.query(
+                user_input,
+                top_k=top_k,
+                template_version=tv,
+                pure_llm_mode=False
+            )
+
+        # ── Response ─────────────────────────────────────────────
+        st.markdown(response)
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+        # ── Retrieved chunks ──────────────────────────────────────
+        with st.expander(f"📄 Retrieved Chunks ({len(log.retrieved_chunks)})", expanded=False):
+            for i, chunk in enumerate(log.retrieved_chunks, 1):
+                src_class = ("source-badge-budget" if chunk["source"] == "budget"
+                             else "source-badge-election")
+                st.markdown(
+                    f'<div class="chunk-card">'
+                    f'<span class="score-badge">#{i} score={chunk["score"]}</span>'
+                    f'<span class="score-badge {src_class}">'
+                    f'{chunk["source"].upper()} p.{chunk["page"]}</span><br><br>'
+                    f'{chunk["text_snippet"]}...'
+                    f'</div>',
+                    unsafe_allow_html=True
+                )
+
+        # ── Memory context ────────────────────────────────────────
+        if log.memory_context:
+            with st.expander("🧠 Memory Context Used", expanded=False):
+                st.markdown(
+                    f'<span class="memory-badge">SESSION MEMORY</span><br><br>'
+                    f'<pre style="font-size:0.8rem">{log.memory_context[:600]}</pre>',
+                    unsafe_allow_html=True
+                )
+
+        # ── Failure warning ───────────────────────────────────────
+        if log.failure_detected:
+            st.markdown(
+                f'<div class="failure-warning">⚠️ <strong>Retrieval warning:</strong> '
+                f'{log.failure_reason} — fallback retrieval was used.</div>',
+                unsafe_allow_html=True
+            )
+
+        # ── Debug view ────────────────────────────────────────────
+        if show_debug:
+            with st.expander("🔬 Pipeline Debug", expanded=True):
+                col1, col2, col3 = st.columns(3)
+                col1.metric("Prompt Tokens", log.prompt_tokens)
+                col2.metric("Latency (ms)", f"{log.latency_ms:.0f}")
+                col3.metric("Template", log.template_version)
+
+                st.markdown("**Expanded Query:**")
+                st.code(log.expanded_query or user_input)
+
+                st.markdown("**Final Prompt (truncated):**")
+                st.code(log.final_prompt[:800] + "...", language="text")
+
+                st.markdown("**Selected Chunks:**")
+                for sc in log.selected_chunks:
+                    st.write(f"• `{sc['chunk_id']}` | score={sc['score']} | "
+                             f"{sc['text'][:100]}...")
+
+        # ── Pure LLM comparison ───────────────────────────────────
+        if pure_llm_compare:
+            with st.expander("🤖 Pure-LLM Response (no retrieval)", expanded=False):
+                with st.spinner("Running pure LLM..."):
+                    llm_response, _ = pipeline.query(
+                        user_input, pure_llm_mode=True
+                    )
+                st.markdown("**RAG Response:**")
+                st.info(response[:400])
+                st.markdown("**Pure LLM Response:**")
+                st.warning(llm_response[:400] if llm_response else
+                           "[No API key — cannot call LLM]")
+                st.caption("RAG uses retrieved documents; Pure LLM uses only "
+                           "the model's training data (may hallucinate).")
 
 # ─────────────────────────────────────────────
 # BOTTOM — EXAMPLE QUERIES
