@@ -252,7 +252,7 @@ Follow-up query "What drove that growth?" — without memory: 0.09 similarity (f
 
 ### Prerequisites
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt or python -m pip install -r requirements.txt
 ```
 
 ### Environment Variables
@@ -263,7 +263,7 @@ export LLM_API_KEY="your-key"
 
 ### Run Locally
 ```bash
-streamlit run app.py
+streamlit run app.py or python -m streamlit run app.py
 ```
 
 ### Deployment (Streamlit Cloud)
