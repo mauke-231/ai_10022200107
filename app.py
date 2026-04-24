@@ -1,6 +1,6 @@
 """
 Academic City RAG Chatbot — Streamlit UI
-Author: [Your Name] | Index: [Your Index]
+Author: Maukewonge Yaw Nyarko-Tetteh | Index: 10022200107
 CS4241 - Introduction to Artificial Intelligence, 2026
 
 Features:
