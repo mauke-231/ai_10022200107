@@ -64,21 +64,33 @@ class LLMClient:
                  max_tokens: int = 800) -> Tuple[str, Dict]:
         """
         Send prompt to LLM. Returns (response_text, metadata).
+        Retries up to 3 times with exponential backoff on 429 rate limits.
         """
         if not self.api_key:
             return ("[No API key set. Set LLM_API_KEY in your environment "
                     "to get live responses.]", {})
 
-        if self.provider == "anthropic":
-            return self._call_anthropic(prompt, system, max_tokens)
-        elif self.provider == "openai":
-            return self._call_openai(prompt, system, max_tokens)
-        elif self.provider == "google":
-            return self._call_google(prompt, max_tokens)
-        elif self.provider == "groq":
-            return self._call_groq(prompt, system, max_tokens)
-        else:
+        _call = {
+            "anthropic": lambda: self._call_anthropic(prompt, system, max_tokens),
+            "openai":    lambda: self._call_openai(prompt, system, max_tokens),
+            "google":    lambda: self._call_google(prompt, max_tokens),
+            "groq":      lambda: self._call_groq(prompt, system, max_tokens),
+        }.get(self.provider)
+        if _call is None:
             raise ValueError(f"Unknown provider: {self.provider}")
+
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                return _call()
+            except requests.exceptions.HTTPError as e:
+                if e.response and e.response.status_code == 429 and attempt < max_retries - 1:
+                    wait = 2 ** attempt  # 1s, 2s on retries 0 and 1
+                    logger.warning(f"  Rate limited (attempt {attempt + 1}/{max_retries}), "
+                                   f"retrying in {wait}s...")
+                    time.sleep(wait)
+                else:
+                    raise
 
     def _call_anthropic(self, prompt: str, system: str,
                          max_tokens: int) -> Tuple[str, Dict]:
@@ -316,7 +328,9 @@ class RAGPipeline:
 
         # ── STAGE 4: Context selection ────────────────────────────────
         logger.info("[STAGE 4] Context selection and token management...")
-        selected = rank_and_filter_chunks(raw_pairs, user_query)
+        # min_score=0.0: RRF scores top out at ~0.033; score-filtering is meaningless
+        # here — deduplication + token budget handle selection quality instead.
+        selected = rank_and_filter_chunks(raw_pairs, user_query, min_score=0.0)
         log.selected_chunks = [
             {"chunk_id": c.chunk_id, "source": c.source,
              "score": round(s, 4), "text": c.text[:200]}

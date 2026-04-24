@@ -191,11 +191,10 @@ class PromptBuilder:
         chunks_with_scores: output of rank_and_filter_chunks
         history: list of {"role": "user"|"assistant", "content": str}
         """
-        # Manage context
-        managed_chunks = rank_and_filter_chunks(
-            chunks_with_scores,
-            query,
-            max_tokens=self.max_context_tokens
+        # Chunks are already ranked/deduped by the pipeline (Stage 4).
+        # Just apply the token budget here to avoid truncating the prompt.
+        managed_chunks = truncate_to_token_budget(
+            chunks_with_scores, self.max_context_tokens
         )
         context_str = format_context(managed_chunks)
 

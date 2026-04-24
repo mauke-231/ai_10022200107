@@ -298,7 +298,7 @@ class HybridRetriever:
 # ─────────────────────────────────────────────
 
 def detect_retrieval_failure(results: List[Tuple], query: str,
-                              score_threshold: float = 0.05) -> Tuple[bool, str]:
+                              score_threshold: float = 0.015) -> Tuple[bool, str]:
     """
     Detects when retrieval has likely failed.
     Failure conditions:

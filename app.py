@@ -148,19 +148,19 @@ with st.sidebar:
 
 
 # ─────────────────────────────────────────────
-# PIPELINE INITIALISATION (cached)
+# PIPELINE INITIALISATION
 # ─────────────────────────────────────────────
 
 @st.cache_resource(show_spinner=False)
-def get_pipeline(provider: str):
-    """Cache one pipeline per provider; api_key is injected at query time."""
+def get_pipeline(_api_key: str, provider: str):
+    """Cache pipeline - API key in args ensures proper initialization."""
     from pipeline import build_pipeline
-    return build_pipeline(BASE_DIR, api_key="", provider=provider)
+    return build_pipeline(BASE_DIR, api_key=_api_key, provider=provider)
 
 
 def load_pipeline():
     with st.spinner("🔧 Building RAG index (first run may take ~2 minutes)..."):
-        st.session_state.pipeline = get_pipeline(provider)
+        st.session_state.pipeline = get_pipeline(api_key, provider)
         st.session_state["_pipeline_provider"] = provider
 
 
@@ -204,7 +204,8 @@ def process_query(user_input):
 
     # Run pipeline
     pipeline = st.session_state.pipeline
-    pipeline.llm.api_key = api_key
+    # API key is now set at pipeline creation time
+    # Just ensure provider is correct
     pipeline.llm.provider = provider
     pipeline.llm.model = pipeline.llm._default_model()
 
@@ -218,8 +219,11 @@ def process_query(user_input):
             )
 
         # ── Response ─────────────────────────────────────────────
-        st.markdown(response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        if log.llm_metadata.get("error") == "rate_limit":
+            st.error("**Rate limit reached.** Groq is rejecting requests — wait 30–60 seconds and try again, or switch to a different LLM provider.")
+        else:
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
         # ── Retrieved chunks ──────────────────────────────────────
         with st.expander(f"📄 Retrieved Chunks ({len(log.retrieved_chunks)})", expanded=False):
@@ -297,7 +301,8 @@ if user_input:
 
     # Run pipeline
     pipeline = st.session_state.pipeline
-    pipeline.llm.api_key = api_key
+    # API key is now set at pipeline creation time
+    # Just ensure provider is correct
     pipeline.llm.provider = provider
     pipeline.llm.model = pipeline.llm._default_model()
 
@@ -311,8 +316,11 @@ if user_input:
             )
 
         # ── Response ─────────────────────────────────────────────
-        st.markdown(response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        if log.llm_metadata.get("error") == "rate_limit":
+            st.error("**Rate limit reached.** Groq is rejecting requests — wait 30–60 seconds and try again, or switch to a different provider in the sidebar.")
+        else:
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
         # ── Retrieved chunks ──────────────────────────────────────
         with st.expander(f"📄 Retrieved Chunks ({len(log.retrieved_chunks)})", expanded=False):
@@ -404,7 +412,8 @@ for i, ex in enumerate(examples):
 
         # Run pipeline
         pipeline = st.session_state.pipeline
-        pipeline.llm.api_key = api_key
+        # API key is now set at pipeline creation time
+        # Just ensure provider is correct
         pipeline.llm.provider = provider
         pipeline.llm.model = pipeline.llm._default_model()
 
