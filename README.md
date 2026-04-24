@@ -64,18 +64,6 @@ streamlit run app.py or python -m streamlit run app.py
     └── documentation.md      → Full technical documentation
 ```
 
-## Exam Parts Coverage
-| Part | Description | Marks |
-|------|-------------|-------|
-| A | Data Engineering & Chunking (2 strategies) | 4 |
-| B | Custom FAISS + BM25 Hybrid Retrieval | 6 |
-| C | 3 Prompt Templates + Hallucination Control | 4 |
-| D | Full 7-Stage Pipeline with Logging | 10 |
-| E | Adversarial Testing + RAG vs LLM Comparison | 6 |
-| F | Architecture Diagram + Justification | 8 |
-| G | Memory-Based RAG (Innovation) | 6 |
-| Final | Streamlit UI + Video + Logs + Docs | 16 |
-
 ## Architecture
 See `docs/architecture.html` for the full interactive diagram.
 
