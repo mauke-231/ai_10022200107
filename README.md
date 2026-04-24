@@ -59,13 +59,11 @@ streamlit run app.py or python -m streamlit run app.py
 ├── data/                     → Processed datasets
 ├── logs/                     → Pipeline + adversarial logs
 └── docs/
-    ├── architecture.html     → System architecture diagram
-    ├── experiment_logs.md    → Manual experiment logs
-    └── documentation.md      → Full technical documentation
+    └── experiment_logs.md    → Manual experiment logs
 ```
 
 ## Architecture
-See `docs/architecture.html` for the full interactive diagram.
+Architecture diagram attached to email.
 
 Data Flow:  
 `PDF/CSV → Clean → Chunk → Embed → FAISS+BM25 → Hybrid Retrieval → Memory Check → Context Selection → Prompt → LLM → Response`
