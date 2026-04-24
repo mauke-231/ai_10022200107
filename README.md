@@ -39,7 +39,7 @@ cd ai_10022200107
 pip install -r requirements.txt or python -m pip install -r requirements.txt
 
 # 3. Set your LLM API key
-export LLM_PROVIDER="anthropic"   # or "openai" or "google"
+export LLM_PROVIDER="groq"   # or "openai", "google" or "anthropic"
 export LLM_API_KEY="your-api-key"
 
 # 4. Run the app
@@ -63,18 +63,6 @@ streamlit run app.py or python -m streamlit run app.py
     ├── experiment_logs.md    → Manual experiment logs
     └── documentation.md      → Full technical documentation
 ```
-
-## Exam Parts Coverage
-| Part | Description | Marks |
-|------|-------------|-------|
-| A | Data Engineering & Chunking (2 strategies) | 4 |
-| B | Custom FAISS + BM25 Hybrid Retrieval | 6 |
-| C | 3 Prompt Templates + Hallucination Control | 4 |
-| D | Full 7-Stage Pipeline with Logging | 10 |
-| E | Adversarial Testing + RAG vs LLM Comparison | 6 |
-| F | Architecture Diagram + Justification | 8 |
-| G | Memory-Based RAG (Innovation) | 6 |
-| Final | Streamlit UI + Video + Logs + Docs | 16 |
 
 ## Architecture
 See `docs/architecture.html` for the full interactive diagram.

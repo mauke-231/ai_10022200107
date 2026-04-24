@@ -102,7 +102,7 @@
 
 **Session sequence:**  
 1. Q: "What is Ghana's 2025 GDP projection?" → A: "4.0% growth projected."  
-2. Q: "What drove that growth?" ← follow-up with "that" pronoun  
+2. Q: "What drove that growth stated earlier?" ← follow-up with "that" pronoun  
 
 **Without memory:** System returned irrelevant chunks about election results (0.09 score).  
 **With memory:** Memory retrieval score for entry 1 was 0.71 (high match on "GDP growth"). Memory context was injected. System correctly answered: "The GDP growth of 4.0% is driven by the services sector, oil production, and agriculture according to the 2025 Budget."  
