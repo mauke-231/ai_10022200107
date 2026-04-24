@@ -63,7 +63,7 @@ streamlit run app.py or python -m streamlit run app.py
 ```
 
 ## Architecture
-See `docs/architecture.html` for the full interactive diagram.
+Architecture diagram attached to email.
 
 Data Flow:  
 `PDF/CSV → Clean → Chunk → Embed → FAISS+BM25 → Hybrid Retrieval → Memory Check → Context Selection → Prompt → LLM → Response`
