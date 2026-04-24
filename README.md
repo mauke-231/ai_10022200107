@@ -59,9 +59,7 @@ streamlit run app.py or python -m streamlit run app.py
 ├── data/                     → Processed datasets
 ├── logs/                     → Pipeline + adversarial logs
 └── docs/
-    ├── architecture.html     → System architecture diagram
-    ├── experiment_logs.md    → Manual experiment logs
-    └── documentation.md      → Full technical documentation
+    └── experiment_logs.md    → Manual experiment logs
 ```
 
 ## Architecture
