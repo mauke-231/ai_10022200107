@@ -39,7 +39,7 @@ cd ai_10022200107
 pip install -r requirements.txt or python -m pip install -r requirements.txt
 
 # 3. Set your LLM API key
-export LLM_PROVIDER="anthropic"   # or "openai" or "google"
+export LLM_PROVIDER="groq"   # or "openai", "google" or "anthropic"
 export LLM_API_KEY="your-api-key"
 
 # 4. Run the app
